@@ -5,9 +5,9 @@ import reportWebVitals from "./common/reportWebVitals";
 import {createRoot} from "react-dom/client";
 
 // @ts-ignore
-const root = createRoot(document.getElementById('root'));
+const container = createRoot(document.querySelector('body'));
 
-root.render(
+container.render(
     <React.StrictMode>
         <App />
     </React.StrictMode>

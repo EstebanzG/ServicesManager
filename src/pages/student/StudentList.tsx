@@ -21,11 +21,13 @@ function StudentList() {
             .select('*')
         setStudents(data || []);
     };
+
     return (
         <div>
             <h1 className="text-3xl font-bold underline text-red-600">
                 STUDENT
             </h1>
+            {  }
             {students.map((student) => (
                 <p key={ student.id }>{ student.firstname }</p>
             ))}
