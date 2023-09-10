@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { supabase } from '../../common/supabaseClient';
+import Navbar from "../../component/navbar/Navbar";
 
 interface Student {
     id: number;
@@ -23,15 +24,17 @@ function StudentList() {
     };
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold underline text-red-600">
-                STUDENT
-            </h1>
-            {  }
-            {students.map((student) => (
-                <p key={ student.id }>{ student.firstname }</p>
-            ))}
-        </div>
+        <>
+            <Navbar />
+            <div>
+                <h1 className="text-3xl font-bold underline text-red-600">
+                    STUDENT
+                </h1>
+                {students.map((student) => (
+                    <p key={ student.id }>{ student.firstname }</p>
+                ))}
+            </div>
+        </>
     );
 }
 

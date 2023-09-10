@@ -1,10 +1,10 @@
 import React from 'react';
-import HomeHeader from "./Components/HomeHeader";
-import HomeButton from "./Components/HomeButton";
+import HomeHeader from "./components/HomeHeader";
+import HomeButton from "./components/HomeButton";
 
 function Home() {
     return (
-        <>
+        <div className={"w-full h-full flex flex-col items-center justify-around"}>
             <HomeHeader />
             <div className={"flex justify-around w-10/12 h-[70%]"}>
                 <div className={"bg-blue-50 w-5/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
@@ -21,7 +21,7 @@ function Home() {
                     <HomeButton name={"Impression"} url={'student'}/>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
