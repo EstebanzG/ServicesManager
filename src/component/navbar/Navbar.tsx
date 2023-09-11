@@ -2,7 +2,7 @@ import React from 'react';
 
 function Navbar() {
     return (
-        <div className={"w-full bg-blue-50 shadow-xl h-[5%] mb-4"}>
+        <div className={"w-full bg-blue-50 shadow-xl h-fit mb-6"}>
             <div className={"h-full flex items-center justify-around w-full lg:w-4/12"}>
                 <div className={"w-2/12 pl-2"}>
                     <a href={"/home"} className={"mr-2 flex items-center"}>
@@ -20,11 +20,11 @@ function Navbar() {
                             </svg>
                         </div>
                         <div className={"invisible absolute z-50 flex w-full flex-col py-1 bg-blue-50 shadow-xl group-hover:visible"}>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Élève</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Classe</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Semaine</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Service</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Période</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/student"}>Élève</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/class"}>Classe</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/week"}>Semaine</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/service"}>Service</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/period"}>Période</a>
                         </div>
                     </div>
                 </div>
@@ -37,8 +37,8 @@ function Navbar() {
                             </svg>
                         </div>
                         <div className={"invisible absolute z-50 flex w-full flex-col py-1 bg-blue-50 shadow-xl group-hover:visible"}>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Impression</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600">Répartition</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/print"}>Impression</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/distribute"}>Répartition</a>
                         </div>
                     </div>
                 </div>
