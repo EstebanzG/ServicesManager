@@ -8,9 +8,7 @@ import {createRoot} from "react-dom/client";
 const container = createRoot(document.querySelector('body'));
 
 container.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+    <App />
 );
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
