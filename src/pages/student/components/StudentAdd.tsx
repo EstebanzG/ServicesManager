@@ -5,7 +5,7 @@ import {validateStudent} from "../../../common/validation/studentValidate";
 
 interface props {
     classes: Classe[];
-    loadStudents: () => void
+    loadStudents: () => void;
 }
 
 function StudentAdd({classes, loadStudents} : props) {

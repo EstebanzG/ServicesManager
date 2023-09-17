@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Classe, Student} from "../../../../database.types";
 import {supabase} from "../../../common/supabaseClient";
 import {validateStudent} from "../../../common/validation/studentValidate";
@@ -19,12 +19,18 @@ function StudentUpdate({student, classes, loadStudents} : props) {
         ['classe', []],
     ]));
 
+    useEffect(() => {
+        setFirstName(student.firstname)
+        setLastName(student.lastname)
+        setClasse(String(student.classe.id))
+    }, [student]);
+
     const update = (event: React.MouseEvent) => {
         event.preventDefault();
         let isValid = validateStudent(student.firstname, student.lastname, String(student.classe.id), setFormErrors);
         if (isValid) {
             updateRequest().then(() => {
-                    loadStudents()
+                    loadStudents();
                 }
             )
         }
@@ -32,7 +38,6 @@ function StudentUpdate({student, classes, loadStudents} : props) {
     }
 
     const updateRequest = async () => {
-
         const { error } = await supabase
             .from('student')
             .update({
@@ -98,7 +103,7 @@ function StudentUpdate({student, classes, loadStudents} : props) {
                     </select>
                 </div>
                 <button type={"submit"} onClick={(event) => update(event)} className={"bg-blue-500 w-6/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-blue-400"}>
-                    <h4 className={"text-white font-bold text-xl"}>Ajouter</h4>
+                    <h4 className={"text-white font-bold text-xl"}>Modifier</h4>
                 </button>
             </form>
         </div>

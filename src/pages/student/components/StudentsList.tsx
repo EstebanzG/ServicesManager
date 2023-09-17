@@ -3,6 +3,8 @@ import {Student} from "../../../../database.types";
 
 interface props {
     students: Student[];
+    isFirstPage : boolean;
+    isLastPage: boolean;
     addStudent: () => void
     updateStudent: (id: number) => void
     deleteStudent: (id: number) => void
@@ -11,7 +13,7 @@ interface props {
 }
 
 
-function StudentsList({students, addStudent, updateStudent, deleteStudent, prevRange, nextRange} : props) {
+function StudentsList({students, isFirstPage, isLastPage, addStudent, updateStudent, deleteStudent, prevRange, nextRange} : props) {
    return (
        <div className={"bg-blue-50 w-8/12 rounded-lg shadow-xl"}>
            <div className={"flex justify-start items-center mt-5"}>
@@ -57,13 +59,13 @@ function StudentsList({students, addStudent, updateStudent, deleteStudent, prevR
            </div>
            <div className={"flex justify-center mb-5"}>
                <div className={"flex justify-end w-10/12"}>
-                   <button onClick={ prevRange }>
-                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                   <button onClick={ prevRange } disabled={ isFirstPage } >
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 ${isFirstPage ? 'hidden' : ''}`} >
                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                        </svg>
                    </button>
-                   <button onClick={ nextRange }>
-                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                   <button onClick={ nextRange } disabled={ isLastPage }>
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 ${ isLastPage ? 'hidden' : ''}`}>
                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                        </svg>
                    </button>

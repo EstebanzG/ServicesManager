@@ -9,10 +9,9 @@ function App() {
         <div className={"bg-blue-100 w-screen h-screen"}>
             <Router>
                 <Routes>
-                    <Route path="/" element={<Welcome />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/student" element={<StudentPage />} />
-                    <Route path="*" element={<Navigate to="/" />} />
+                    <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
             </Router>
         </div>
