@@ -1,27 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {supabase} from "../../../common/supabaseClient";
-import {Classe} from "../../../../database.types";
-import {validateStudent} from "../../../common/validation/studentValidate";
 import Success from "../../../component/messages/Success";
 import Error from "../../../component/messages/Error";
+import {validateClass} from "../../../common/validation/classValidate";
 
 
 interface props {
-    classes: Classe[];
-    loadStudents: () => void;
+    loadClasses: () => void;
 }
 
-function StudentAdd({classes, loadStudents} : props) {
-    const [firstname, setFirstname] = useState<string>('');
-    const [lastname, setLastname] = useState<string>('');
-    const [classe, setClasse] = useState<string>('');
+function ClasseAdd({loadClasses} : props) {
+    const [classeName, setClasseName] = useState<string>('');
     const [isLoaded, setIsLoaded] = useState<boolean>(true);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [formErrors, setFormErrors] = useState<Map<string, string[]>>(new Map([
-        ['firstname', []],
-        ['lastname', []],
-        ['classe', []],
+        ['classname', []],
     ]));
 
     useEffect(() => {
@@ -33,37 +27,33 @@ function StudentAdd({classes, loadStudents} : props) {
     const add = (event: React.MouseEvent) => {
         setIsLoaded(false)
         event.preventDefault()
-        let isValid = validateStudent(firstname, lastname, String(classe), setFormErrors);
+        let isValid = validateClass(classeName, setFormErrors);
         if (isValid) {
             addRequest()
                 .then(() => {
                     setIsSuccess(true)
                     setIsLoaded(true)
-                    loadStudents()
+                    loadClasses()
                 })
                 .catch(() => {
                     setIsError(true)
                 })
-        } else {
-            setIsLoaded(true)
         }
     }
 
     const addRequest = async () => {
         const { error} = await supabase
-            .from('student')
+            .from('classe')
             .insert([{
-                firstname: firstname,
-                lastname: lastname,
-                classe: classe
+                name: classeName,
             }])
         return error
     }
 
     return (
         <div className={"pt-5 w-full h-full flex items-center flex-col p-1"}>
-            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Ajout d'un nouvel élève</h4>
-            { isSuccess ? <Success message={"Ajouté avec succès"} /> : ''}
+            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Ajout d'une nouvelle classe</h4>
+            { isSuccess ? <Success message={"Ajoutée avec succès"} /> : ''}
             { isError ? <Error message={"Problème lors de l'ajout, contactez l'administrateur du site"}/> : ''}
             <form className={"w-full flex flex-col items-center"}>
                 <div className={"w-10/12 flex flex-col mb-4"}>
@@ -73,47 +63,14 @@ function StudentAdd({classes, loadStudents} : props) {
                     ))}
                     <input
                         required={true}
-                        name={"lastname"}
+                        name={"classename"}
                         type={"text"}
                         className={"border border-b-2 p-1"}
-                        id={"firstname"}
-                        placeholder={"SATTA"}
-                        value={lastname}
-                        onChange={e => setLastname(e.target.value)}
+                        id={"classname"}
+                        placeholder={"Terminale 1"}
+                        value={classeName}
+                        onChange={e => setClasseName(e.target.value)}
                     />
-                </div>
-                <div className={"w-10/12 flex flex-col mb-4"}>
-                    <label htmlFor={"firstname"} className={"text-blue-600 text-xl font-semibold"}>Prénom</label>
-                    {formErrors.get('firstname')?.map((error) => (
-                        <p key={error}>{error}</p>
-                    ))}
-                    <input
-                        required={true}
-                        name={"firstname"}
-                        type={"text"}
-                        className={"border border-b-2 p-1"}
-                        id={"firstname"}
-                        placeholder={"Charlotte"}
-                        value={firstname}
-                        onChange={e => setFirstname(e.target.value)}
-                    />
-                </div>
-                <div className={"w-10/12 flex flex-col mb-4"}>
-                    <label htmlFor={"classe"} className={"text-blue-600 text-xl font-semibold"}>Classe</label>
-                    {formErrors.get('classe')?.map((error) => (
-                        <p key={error}>{error}</p>
-                    ))}
-                    <select
-                        required={true}
-                        className={"border border-b-2 p-1"}
-                        value={classe}
-                        onChange={e => setClasse(e.target.value)}
-                    >
-                        <option></option>
-                        {classes.map((classe) => (
-                            <option key={classe.id} value={classe.id}>{classe.name}</option>
-                        ))}
-                    </select>
                 </div>
                 <button type={"submit"} onClick={(event) => add(event)} className={"bg-blue-500 w-6/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-blue-400"}>
                     {isLoaded ? ''
@@ -129,4 +86,4 @@ function StudentAdd({classes, loadStudents} : props) {
     );
 }
 
-export default StudentAdd;
+export default ClasseAdd;

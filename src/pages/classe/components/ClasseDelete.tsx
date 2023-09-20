@@ -1,23 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {Student} from "../../../../database.types";
+import React, {useState} from 'react';
+import {Classe, Student} from "../../../../database.types";
 import {supabase} from "../../../common/supabaseClient";
-import Success from "../../../component/messages/Success";
-import Error from "../../../component/messages/Error";
 
 interface props {
-    student: Student;
-    loadStudents: () => void;
+    classe: Classe;
+    loadClasses: () => void;
     clearAction: () => void;
 }
 
-function StudentDelete({student, loadStudents, clearAction} : props) {
+function ClasseDelete({classe, loadClasses, clearAction} : props) {
     const [confirm, setConfirm] = useState<boolean>(false);
 
     const deleteStudent = (event: React.FormEvent) => {
         event.preventDefault();
         if (confirm) {
             deleteRequest()
-                .then(() => {loadStudents()
+                .then(() => {loadClasses()
                     clearAction();
                 })
         } else {
@@ -27,15 +25,15 @@ function StudentDelete({student, loadStudents, clearAction} : props) {
 
     const deleteRequest = async () => {
         const { error } = await supabase
-            .from('student')
+            .from('classe')
             .delete()
-            .eq('id', student.id)
+            .eq('id', classe.id)
         return error
     }
 
     return (
         <div className={"pt-5 w-full h-full flex items-center flex-col p-1"}>
-            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Voulez-vous vraiment supprimer l'élève { student?.firstname } { student.lastname } ?</h4>
+            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Voulez-vous vraiment supprimer la classe { classe.name } ?</h4>
             <form className={"w-full flex flex-col items-center"} onSubmit={(event) => deleteStudent(event)}>
                 <button type={"submit"}
                         className={"bg-red-500 w-8/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-red-400"}
@@ -54,4 +52,4 @@ function StudentDelete({student, loadStudents, clearAction} : props) {
     );
 }
 
-export default StudentDelete;
+export default ClasseDelete;

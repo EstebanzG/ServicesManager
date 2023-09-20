@@ -10,15 +10,15 @@ function Home() {
                 <div className={"bg-blue-50 w-5/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
                     <h4 className={"w-full text-blue-600 text-3xl font-bold ml-16 mb-7 mt-7"}>Listes</h4>
                     <HomeButton name={"Élève"} url={'student'} />
-                    <HomeButton name={"Classe"} url={'student'} />
-                    <HomeButton name={"Semaine"} url={'student'}/>
-                    <HomeButton name={"Service"} url={'student'}/>
-                    <HomeButton name={"Période"} url={'student'}/>
+                    <HomeButton name={"Classe"} url={'classe'} />
+                    <HomeButton name={"Semaine"} url={'week'}/>
+                    <HomeButton name={"Période"} url={'period'}/>
+                    <HomeButton name={"Service"} url={'service'}/>
                 </div>
                 <div className={"bg-blue-50 w-5/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
                     <h4 className={"w-full text-blue-600 text-3xl font-bold ml-16 mb-7 mt-7"}>Actions</h4>
-                    <HomeButton name={"Répartition"} url={'student'}/>
-                    <HomeButton name={"Impression"} url={'student'}/>
+                    <HomeButton name={"Répartition"} url={'repartition'}/>
+                    <HomeButton name={"Impression"} url={'print'}/>
                 </div>
             </div>
         </div>

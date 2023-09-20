@@ -21,10 +21,10 @@ function Navbar() {
                         </div>
                         <div className={"invisible absolute z-50 flex w-full flex-col py-1 bg-blue-50 shadow-xl group-hover:visible"}>
                             <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/student"}>Élève</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/class"}>Classe</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/classe"}>Classe</a>
                             <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/week"}>Semaine</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/service"}>Service</a>
                             <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/period"}>Période</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/service"}>Service</a>
                         </div>
                     </div>
                 </div>

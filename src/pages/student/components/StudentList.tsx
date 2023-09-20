@@ -10,19 +10,29 @@ interface props {
     deleteStudent: (id: number) => void
     prevRange: () => void
     nextRange: () => void
+    isLoaded: boolean
 }
 
 
-function StudentsList({students, isFirstPage, isLastPage, addStudent, updateStudent, deleteStudent, prevRange, nextRange} : props) {
+function StudentList(
+    {students, isFirstPage, isLastPage, addStudent, updateStudent, deleteStudent, prevRange, nextRange, isLoaded} : props) {
    return (
        <div className={"bg-blue-50 w-8/12 rounded-lg shadow-xl"}>
            <div className={"flex justify-start items-center mt-5"}>
                <h4 className={"text-blue-600 text-3xl font-bold ml-10 mr-3"}>Élèves</h4>
-               <button onClick={addStudent}>
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-blue-600">
-                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                   </svg>
-               </button>
+               {isLoaded ?
+                   <button onClick={addStudent}>
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-blue-600">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                       </svg>
+                   </button>
+                   :
+                   <div>
+                       <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+                       </svg>
+                   </div>
+               }
+
            </div>
            <div className={"w-full flex justify-center"}>
                <table className={"border-collapse w-10/12 mb-7"}>
@@ -39,7 +49,7 @@ function StudentsList({students, isFirstPage, isLastPage, addStudent, updateStud
                        <tr key={ student.id } className={"border-b-2 border-blue-100 hover:bg-blue-100"}>
                            <td className={"break-all"}>{ student.lastname }</td>
                            <td className={"break-all"}>{ student.firstname }</td>
-                           <td>{ student.classe.name }</td>
+                           <td>{ student.classe?.name }</td>
                            <td className={"flex justify-around items-center"}>
                                <button onClick={() => updateStudent(student.id)}>
                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -48,7 +58,7 @@ function StudentsList({students, isFirstPage, isLastPage, addStudent, updateStud
                                </button>
                                <button onClick={() => deleteStudent(student.id)}>
                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                    </svg>
                                </button>
                            </td>
@@ -75,4 +85,4 @@ function StudentsList({students, isFirstPage, isLastPage, addStudent, updateStud
    );
 }
 
-export default StudentsList;
+export default StudentList;

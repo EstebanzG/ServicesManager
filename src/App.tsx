@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Welcome from './pages/welcome/Welcome';
 import StudentPage from './pages/student/Students';
 import Home from "./pages/home/Home";
+import Classe from "./pages/classe/Classe";
+import ClassePage from "./pages/classe/Classe";
 
 function App() {
     return (
@@ -11,6 +13,7 @@ function App() {
                 <Routes>
                     <Route path="/home" element={<Home />} />
                     <Route path="/student" element={<StudentPage />} />
+                    <Route path="/classe" element={<ClassePage />} />
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
             </Router>

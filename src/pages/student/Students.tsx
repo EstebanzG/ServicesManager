@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { supabase } from '../../common/supabaseClient';
 import Navbar from "../../component/navbar/Navbar";
-import StudentsList from "./components/StudentsList";
+import StudentList from "./components/StudentList";
 import StudentDelete from "./components/StudentDelete";
 import StudentAdd from "./components/StudentAdd";
 import StudentUpdate from "./components/StudentUpdate";
@@ -21,9 +21,12 @@ function Students() {
     const [range, setRange] = useState<number>(0);
     const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        loadStudents().then()
+        loadStudents().then(() => {
+            setIsLoaded(true)
+        })
     }, [range]);
 
     const displayAddForm = () => {
@@ -98,8 +101,6 @@ function Students() {
     }
 
     const manageFirstAndLastPage = (nbOfStudent: number) => {
-        console.log(range)
-        console.log(nbOfStudent)
         if (range - rangeSize < 0) {
             setIsFirstPage(true)
         } else {
@@ -123,7 +124,7 @@ function Students() {
         <>
             <Navbar />
             <div className={"flex justify-around items-start"}>
-                <StudentsList
+                <StudentList
                     students={students}
                     isFirstPage={isFirstPage}
                     isLastPage={isLastPage}
@@ -132,6 +133,7 @@ function Students() {
                     deleteStudent={(id) => displayDeleteForm(id)}
                     prevRange={prevRange}
                     nextRange={nextRange}
+                    isLoaded={isLoaded}
                 />
                 <div id={"actions"} className={"bg-blue-50 w-3/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
                     {currentAction === actionAdd && <StudentAdd
