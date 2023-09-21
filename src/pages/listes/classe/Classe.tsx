@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { supabase } from '../../common/supabaseClient';
-import Navbar from "../../component/navbar/Navbar";
+import { supabase } from '../../../common/supabaseClient';
+import Navbar from "../../../component/navbar/Navbar";
 import ClasseList from "./components/ClasseList";
 import ClasseDelete from "./components/ClasseDelete";
 import ClasseAdd from "./components/ClasseAdd";
 import ClasseUpdate from "./components/ClasseUpdate";
-import {Classe} from "../../../database.types";
+import {Classe} from "../../../../database.types";
+import {manageFirstAndLastPage} from "../../../common/utils";
 
 const actionAdd: string = "add"
 const actionUpdate: string = "update"
@@ -21,12 +22,17 @@ function ClassePage() {
     const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
 
     useEffect(() => {
-        loadClasses().then(() => {
-            setIsLoaded(true)
-        })
-    }, [range]);
+        if (isSuccess) {
+            setTimeout(() => {
+                setIsSuccess(false)
+            }, 10000)
+        }
+        loadClasses().then();
+    }, [range, isSuccess]);
 
     const displayAddForm = () => {
         setCurrentAction(actionAdd);
@@ -74,30 +80,19 @@ function ClassePage() {
     }
 
     const loadClasses= async () => {
+        setIsLoaded(false)
         countClasse().then(async (nbOfClasses : number) => {
                 let {data} = await supabase
                     .from('classe')
                     .select('*')
                     .order('name')
-                    .range(range, range + 20)
+                    .range(range, range + 20);
                 setClasses(data || []);
-                manageFirstAndLastPage(nbOfClasses)
+                setIsLoaded(true);
+                manageFirstAndLastPage(nbOfClasses, range, rangeSize, setIsFirstPage, setIsLastPage);
             }
         )
 
-    }
-
-    const manageFirstAndLastPage = (nbOfClasses: number) => {
-        if (range - rangeSize < 0) {
-            setIsFirstPage(true)
-        } else {
-            setIsFirstPage(false)
-        }
-        if (range + rangeSize <= nbOfClasses) {
-            setIsLastPage(false)
-        } else {
-            setIsLastPage(true)
-        }
     }
 
     return (
@@ -114,19 +109,28 @@ function ClassePage() {
                     nextRange={nextRange}
                     isLoaded={isLoaded}
                     classes={classes}
+                    isSuccess={isSuccess}
+                    isError={isError}
                 />
                 <div id={"actions"} className={"bg-blue-50 w-3/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
                     {currentAction === actionAdd && <ClasseAdd
                         loadClasses={loadClasses}
+                        setIsSuccess={setIsSuccess}
+                        setIsError={setIsError}
                     />}
                     {currentAction === actionUpdate && currentClasse !== null && <ClasseUpdate
                         classe={currentClasse}
                         loadClasses={loadClasses}
+                        clearAction={clearCurrentAction}
+                        setIsSuccess={setIsSuccess}
+                        setIsError={setIsError}
                     />}
                     {currentAction === actionDelete && currentClasse !== null && <ClasseDelete
                         classe={currentClasse}
                         loadClasses={loadClasses}
                         clearAction={clearCurrentAction}
+                        setIsSuccess={setIsSuccess}
+                        setIsError={setIsError}
                     />}
                 </div>
             </div>

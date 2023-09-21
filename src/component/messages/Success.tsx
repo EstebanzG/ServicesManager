@@ -1,11 +1,6 @@
 import React from 'react';
 
-interface props {
-    message: string;
-}
-
-
-function Success({message} : props) {
+function Success() {
     return (
         <div className="flex items-center text-green-800" role="alert">
             <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +10,7 @@ function Success({message} : props) {
                 />
             </svg>
             <div>
-                <span className="font-medium">{message}</span>
+                <span className="font-medium">Action effectuée avec succès !</span>
             </div>
         </div>
     );

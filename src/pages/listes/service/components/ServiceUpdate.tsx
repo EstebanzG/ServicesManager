@@ -1,45 +1,38 @@
 import React, {useEffect, useState} from 'react';
-import {Classe} from "../../../../database.types";
-import {supabase} from "../../../common/supabaseClient";
-import Success from "../../../component/messages/Success";
-import Error from "../../../component/messages/Error";
-import {validateClass} from "../../../common/validation/classValidate";
+import {Service} from "../../../../../database.types";
+import {supabase} from "../../../../common/supabaseClient";
+import {validateClass} from "../../../../common/validation/classValidate";
 
 interface props {
-    classe: Classe;
-    loadClasses: () => void
+    service: Service;
+    loadServices: () => void
+    clearAction: () => void;
+    setIsSuccess: (success: boolean) => void;
+    setIsError: (error: boolean) => void;
 }
 
-function ClasseUpdate({classe, loadClasses} : props) {
-    const [classeName, setClasseName] = useState<string>(classe.name);
+function ServiceUpdate({service, loadServices, clearAction, setIsSuccess, setIsError} : props) {
+    const [serviceName, setServiceName] = useState<string>(service.name);
     const [isLoaded, setIsLoaded] = useState<boolean>(true);
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
-    const [isError, setIsError] = useState<boolean>(false);
     const [formErrors, setFormErrors] = useState<Map<string, string[]>>(new Map([
-        ['firstname', []],
-        ['lastname', []],
-        ['classe', []],
+        ['service', []],
     ]));
 
     useEffect(() => {
-        setClasseName(classe.name)
-        if (isSuccess) {
-            setTimeout(() => {
-                setIsSuccess(false)
-            }, 10000)
-        }
-    }, [classe, isSuccess]);
+        setServiceName(service.name)
+    }, [service]);
 
     const update = (event: React.MouseEvent) => {
         setIsLoaded(false)
         event.preventDefault();
-        let isValid = validateClass(classeName, setFormErrors);
+        let isValid = validateClass(serviceName, setFormErrors);
         if (isValid) {
             updateRequest()
                 .then(() => {
+                    loadServices()
                     setIsSuccess(true)
                     setIsLoaded(true)
-                    loadClasses()
+                    clearAction()
                 })
                 .catch(() => {
                     setIsError(true)
@@ -49,19 +42,17 @@ function ClasseUpdate({classe, loadClasses} : props) {
 
     const updateRequest = async () => {
         const { error } = await supabase
-            .from('classe')
+            .from('service')
             .update({
-                name: classeName
+                name: serviceName
             })
-            .eq('id', classe.id)
+            .eq('id', service.id)
         return error
     }
 
     return (
         <div className={"pt-5 w-full h-full flex items-center flex-col p-1"}>
-            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Modification d'une classe</h4>
-            { isSuccess ? <Success message={"Classe mise à jour avec succès"} /> : ''}
-            { isError ? <Error message={"Problème lors de la mise à jour, contactez l'administrateur du site"}/> : ''}
+            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Modification d'une semaine</h4>
             <form className={"w-full flex flex-col items-center"}>
                 <div className={"w-10/12 flex flex-col mb-4"}>
                     <label htmlFor={"lastName"} className={"text-blue-600 text-xl font-semibold"}>Nom</label>
@@ -70,13 +61,13 @@ function ClasseUpdate({classe, loadClasses} : props) {
                     ))}
                     <input
                         required={true}
-                        name={"classename"}
+                        name={"servicename"}
                         type={"text"}
                         className={"border border-b-2 p-1"}
                         id={"classname"}
-                        placeholder={"Terminale 1"}
-                        value={classeName}
-                        onChange={e => setClasseName(e.target.value)}
+                        placeholder={"Vaiselle"}
+                        value={serviceName}
+                        onChange={e => setServiceName(e.target.value)}
                     />
                 </div>
                 <button type={"submit"} onClick={(event) => update(event)} className={"bg-blue-500 w-6/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-blue-400"}>
@@ -93,4 +84,4 @@ function ClasseUpdate({classe, loadClasses} : props) {
     );
 }
 
-export default ClasseUpdate;
+export default ServiceUpdate;

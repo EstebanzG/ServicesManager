@@ -9,10 +9,10 @@ function Home() {
             <div className={"flex justify-around w-10/12 h-[70%]"}>
                 <div className={"bg-blue-50 w-5/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
                     <h4 className={"w-full text-blue-600 text-3xl font-bold ml-16 mb-7 mt-7"}>Listes</h4>
-                    <HomeButton name={"Élève"} url={'student'} />
+                    <HomeButton name={"Élève"} url={'eleve'} />
                     <HomeButton name={"Classe"} url={'classe'} />
-                    <HomeButton name={"Semaine"} url={'week'}/>
-                    <HomeButton name={"Période"} url={'period'}/>
+                    <HomeButton name={"Semaine"} url={'semaine'}/>
+                    <HomeButton name={"Période"} url={'periode'}/>
                     <HomeButton name={"Service"} url={'service'}/>
                 </div>
                 <div className={"bg-blue-50 w-5/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>

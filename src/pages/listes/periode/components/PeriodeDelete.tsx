@@ -1,22 +1,28 @@
 import React, {useState} from 'react';
-import {Classe, Student} from "../../../../database.types";
-import {supabase} from "../../../common/supabaseClient";
+import {Periode} from "../../../../../database.types";
+import {supabase} from "../../../../common/supabaseClient";
 
 interface props {
-    classe: Classe;
-    loadClasses: () => void;
+    periode: Periode;
+    loadPeriodes: () => void;
     clearAction: () => void;
-}
+    setIsSuccess: (success: boolean) => void;
+    setIsError: (error: boolean) => void;}
 
-function ClasseDelete({classe, loadClasses, clearAction} : props) {
+function PeriodeDelete({periode, loadPeriodes, clearAction, setIsSuccess, setIsError} : props) {
     const [confirm, setConfirm] = useState<boolean>(false);
 
     const deleteStudent = (event: React.FormEvent) => {
         event.preventDefault();
         if (confirm) {
             deleteRequest()
-                .then(() => {loadClasses()
+                .then(() => {
+                    setIsSuccess(true);
                     clearAction();
+                    loadPeriodes();
+                })
+                .catch(() => {
+                    setIsError(true)
                 })
         } else {
             clearAction();
@@ -25,15 +31,15 @@ function ClasseDelete({classe, loadClasses, clearAction} : props) {
 
     const deleteRequest = async () => {
         const { error } = await supabase
-            .from('classe')
+            .from('periode')
             .delete()
-            .eq('id', classe.id)
+            .eq('id', periode.id)
         return error
     }
 
     return (
         <div className={"pt-5 w-full h-full flex items-center flex-col p-1"}>
-            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Voulez-vous vraiment supprimer la classe { classe.name } ?</h4>
+            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Voulez-vous vraiment supprimer la semaine { periode.name } ?</h4>
             <form className={"w-full flex flex-col items-center"} onSubmit={(event) => deleteStudent(event)}>
                 <button type={"submit"}
                         className={"bg-red-500 w-8/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-red-400"}
@@ -52,4 +58,4 @@ function ClasseDelete({classe, loadClasses, clearAction} : props) {
     );
 }
 
-export default ClasseDelete;
+export default PeriodeDelete;

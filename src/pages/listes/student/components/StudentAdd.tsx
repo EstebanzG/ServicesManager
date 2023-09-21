@@ -1,50 +1,36 @@
 import React, {useEffect, useState} from 'react';
-import {Classe, Student} from "../../../../database.types";
-import {supabase} from "../../../common/supabaseClient";
-import {validateStudent} from "../../../common/validation/studentValidate";
-import Success from "../../../component/messages/Success";
-import Error from "../../../component/messages/Error";
+import {supabase} from "../../../../common/supabaseClient";
+import {Classe} from "../../../../../database.types";
+import {validateStudent} from "../../../../common/validation/studentValidate";
 
 interface props {
-    student: Student;
     classes: Classe[];
-    loadStudents: () => void
+    loadStudents: () => void;
+    setIsSuccess: (success: boolean) => void;
+    setIsError: (error: boolean) => void;
 }
 
-function StudentUpdate({student, classes, loadStudents} : props) {
-    const [firstname, setFirstName] = useState<string>(student.firstname);
-    const [lastname, setLastName] = useState<string>(student.lastname);
-    const [classe, setClasse] = useState<string>(String(student.classe?.id));
+function StudentAdd({classes, loadStudents, setIsError, setIsSuccess} : props) {
+    const [firstname, setFirstname] = useState<string>('');
+    const [lastname, setLastname] = useState<string>('');
+    const [classe, setClasse] = useState<string>('');
     const [isLoaded, setIsLoaded] = useState<boolean>(true);
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
-    const [isError, setIsError] = useState<boolean>(false);
     const [formErrors, setFormErrors] = useState<Map<string, string[]>>(new Map([
         ['firstname', []],
         ['lastname', []],
         ['classe', []],
     ]));
 
-    useEffect(() => {
-        setFirstName(student.firstname)
-        setLastName(student.lastname)
-        setClasse(String(student.classe?.id))
-        if (isSuccess) {
-            setTimeout(() => {
-                setIsSuccess(false)
-            }, 10000)
-        }
-    }, [student, isSuccess]);
-
-    const update = (event: React.MouseEvent) => {
+    const add = (event: React.MouseEvent) => {
         setIsLoaded(false)
-        event.preventDefault();
-        let isValid = validateStudent(firstname, lastname, classe, setFormErrors);
+        event.preventDefault()
+        let isValid = validateStudent(firstname, lastname, String(classe), setFormErrors);
         if (isValid) {
-            updateRequest()
+            addRequest()
                 .then(() => {
+                    loadStudents()
                     setIsSuccess(true)
                     setIsLoaded(true)
-                    loadStudents()
                 })
                 .catch(() => {
                     setIsError(true)
@@ -54,27 +40,24 @@ function StudentUpdate({student, classes, loadStudents} : props) {
         }
     }
 
-    const updateRequest = async () => {
-        const { error } = await supabase
+    const addRequest = async () => {
+        const { error} = await supabase
             .from('student')
-            .update({
+            .insert([{
                 firstname: firstname,
                 lastname: lastname,
-                classe: classe,
-            })
-            .eq('id', student.id)
+                classe: classe
+            }])
         return error
     }
 
     return (
         <div className={"pt-5 w-full h-full flex items-center flex-col p-1"}>
-            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Modification d'un élève</h4>
-            { isSuccess ? <Success message={"Élève mit à jour avec succès"} /> : ''}
-            { isError ? <Error message={"Problème lors de la mise à jour, contactez l'administrateur du site"}/> : ''}
+            <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Ajout d'un nouvel élève</h4>
             <form className={"w-full flex flex-col items-center"}>
                 <div className={"w-10/12 flex flex-col mb-4"}>
-                    <label htmlFor={"lastName"} className={"text-blue-600 text-xl font-semibold"}>Nom</label>
-                    {formErrors.get('lastName')?.map((error) => (
+                    <label htmlFor={"lastname"} className={"text-blue-600 text-xl font-semibold"}>Nom</label>
+                    {formErrors.get('lastname')?.map((error) => (
                         <p key={error}>{error}</p>
                     ))}
                     <input
@@ -82,15 +65,15 @@ function StudentUpdate({student, classes, loadStudents} : props) {
                         name={"lastname"}
                         type={"text"}
                         className={"border border-b-2 p-1"}
-                        id={"firstName"}
+                        id={"firstname"}
                         placeholder={"SATTA"}
                         value={lastname}
-                        onChange={e => setLastName(e.target.value)}
+                        onChange={e => setLastname(e.target.value)}
                     />
                 </div>
                 <div className={"w-10/12 flex flex-col mb-4"}>
-                    <label htmlFor={"firstName"} className={"text-blue-600 text-xl font-semibold"}>Prénom</label>
-                    {formErrors.get('firstName')?.map((error) => (
+                    <label htmlFor={"firstname"} className={"text-blue-600 text-xl font-semibold"}>Prénom</label>
+                    {formErrors.get('firstname')?.map((error) => (
                         <p key={error}>{error}</p>
                     ))}
                     <input
@@ -98,10 +81,10 @@ function StudentUpdate({student, classes, loadStudents} : props) {
                         name={"firstname"}
                         type={"text"}
                         className={"border border-b-2 p-1"}
-                        id={"firstName"}
+                        id={"firstname"}
                         placeholder={"Charlotte"}
                         value={firstname}
-                        onChange={e => setFirstName(e.target.value)}
+                        onChange={e => setFirstname(e.target.value)}
                     />
                 </div>
                 <div className={"w-10/12 flex flex-col mb-4"}>
@@ -121,18 +104,18 @@ function StudentUpdate({student, classes, loadStudents} : props) {
                         ))}
                     </select>
                 </div>
-                <button type={"submit"} onClick={(event) => update(event)} className={"bg-blue-500 w-6/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-blue-400"}>
+                <button type={"submit"} onClick={(event) => add(event)} className={"bg-blue-500 w-6/12 flex items-center justify-center rounded-full shadow-lg p-2 mb-7 hover:bg-blue-400"}>
                     {isLoaded ? ''
                         :
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" strokeWidth={1.5} stroke="currentColor" className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
                     }
-                    <h4 className={"text-white font-bold text-xl"}>Modifier</h4>
+                    <h4 className={"text-white font-bold text-xl"}>Ajouter</h4>
                 </button>
             </form>
         </div>
     );
 }
 
-export default StudentUpdate;
+export default StudentAdd;

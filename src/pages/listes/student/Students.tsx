@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { supabase } from '../../common/supabaseClient';
-import Navbar from "../../component/navbar/Navbar";
+import { supabase } from '../../../common/supabaseClient';
+import Navbar from "../../../component/navbar/Navbar";
 import StudentList from "./components/StudentList";
 import StudentDelete from "./components/StudentDelete";
 import StudentAdd from "./components/StudentAdd";
 import StudentUpdate from "./components/StudentUpdate";
-import {Classe, Student} from "../../../database.types";
+import {Classe, Student} from "../../../../database.types";
+import {manageFirstAndLastPage} from "../../../common/utils";
 
 const actionAdd: string = "add"
 const actionUpdate: string = "update"
@@ -22,12 +23,17 @@ function Students() {
     const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
 
     useEffect(() => {
-        loadStudents().then(() => {
-            setIsLoaded(true)
-        })
-    }, [range]);
+        if (isSuccess) {
+            setTimeout(() => {
+                setIsSuccess(false)
+            }, 10000)
+        }
+        loadStudents().then();
+    }, [range, isSuccess]);
 
     const displayAddForm = () => {
         if (classes.length === 0) {
@@ -87,31 +93,20 @@ function Students() {
     }
 
     const loadStudents = async () => {
-        countStudent().then(async (nbOfStudents : number) => {
+        setIsLoaded(false)
+        countStudent().then(async (nb : number) => {
                 let {data} = await supabase
                     .from('student')
                     .select('*, classe(*)')
                     .order('classe, lastname, firstname')
                     .range(range, range + 20)
                 setStudents(data || []);
-                manageFirstAndLastPage(nbOfStudents)
+                setIsLoaded(true)
+                manageFirstAndLastPage(nb, range, rangeSize, setIsFirstPage, setIsLastPage)
             }
         )
-
     }
 
-    const manageFirstAndLastPage = (nbOfStudent: number) => {
-        if (range - rangeSize < 0) {
-            setIsFirstPage(true)
-        } else {
-            setIsFirstPage(false)
-        }
-        if (range + rangeSize <= nbOfStudent) {
-            setIsLastPage(false)
-        } else {
-            setIsLastPage(true)
-        }
-    }
 
     const loadClasses = async () => {
         let { data  } = await supabase
@@ -134,21 +129,30 @@ function Students() {
                     prevRange={prevRange}
                     nextRange={nextRange}
                     isLoaded={isLoaded}
+                    isSuccess={isSuccess}
+                    isError={isError}
                 />
                 <div id={"actions"} className={"bg-blue-50 w-3/12 rounded-lg shadow-xl flex flex-col items-center justify-around h-fit"}>
                     {currentAction === actionAdd && <StudentAdd
                         classes={classes}
                         loadStudents={loadStudents}
+                        setIsSuccess={setIsSuccess}
+                        setIsError={setIsError}
                     />}
                     {currentAction === actionUpdate && currentStudent !== null && <StudentUpdate
                         student={currentStudent}
                         classes={classes}
                         loadStudents={loadStudents}
+                        clearAction={clearCurrentAction}
+                        setIsSuccess={setIsSuccess}
+                        setIsError={setIsError}
                     />}
                     {currentAction === actionDelete && currentStudent !== null && <StudentDelete
                         student={currentStudent}
                         loadStudents={loadStudents}
                         clearAction={clearCurrentAction}
+                        setIsSuccess={setIsSuccess}
+                        setIsError={setIsError}
                     />}
                 </div>
             </div>

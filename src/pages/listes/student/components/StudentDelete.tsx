@@ -1,24 +1,31 @@
 import React, {useEffect, useState} from 'react';
-import {Student} from "../../../../database.types";
-import {supabase} from "../../../common/supabaseClient";
-import Success from "../../../component/messages/Success";
-import Error from "../../../component/messages/Error";
+import {Student} from "../../../../../database.types";
+import {supabase} from "../../../../common/supabaseClient";
+import Success from "../../../../component/messages/Success";
+import Error from "../../../../component/messages/Error";
 
 interface props {
     student: Student;
     loadStudents: () => void;
     clearAction: () => void;
+    setIsSuccess: (success: boolean) => void;
+    setIsError: (error: boolean) => void;
 }
 
-function StudentDelete({student, loadStudents, clearAction} : props) {
+function StudentDelete({student, loadStudents, clearAction, setIsSuccess, setIsError} : props) {
     const [confirm, setConfirm] = useState<boolean>(false);
 
     const deleteStudent = (event: React.FormEvent) => {
         event.preventDefault();
         if (confirm) {
             deleteRequest()
-                .then(() => {loadStudents()
+                .then(() => {
+                    setIsSuccess(true);
                     clearAction();
+                    loadStudents();
+                })
+                .catch(() => {
+                    setIsError(true)
                 })
         } else {
             clearAction();
