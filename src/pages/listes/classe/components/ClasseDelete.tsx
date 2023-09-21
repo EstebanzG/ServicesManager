@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Classe, Student} from "../../../../../database.types";
+import {Classe} from "../../../../../database.types";
 import {supabase} from "../../../../common/supabaseClient";
 
 interface props {

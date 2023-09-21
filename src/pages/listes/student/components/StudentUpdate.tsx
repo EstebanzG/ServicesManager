@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Classe, Student} from "../../../../../database.types";
 import {supabase} from "../../../../common/supabaseClient";
 import {validateStudent} from "../../../../common/validation/studentValidate";
-import Success from "../../../../component/messages/Success";
-import Error from "../../../../component/messages/Error";
 
 interface props {
     student: Student;

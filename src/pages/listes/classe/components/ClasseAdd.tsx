@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {supabase} from "../../../../common/supabaseClient";
-import Success from "../../../../component/messages/Success";
-import Error from "../../../../component/messages/Error";
 import {validateClass} from "../../../../common/validation/classValidate";
 
 

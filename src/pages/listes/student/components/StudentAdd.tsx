@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {supabase} from "../../../../common/supabaseClient";
 import {Classe} from "../../../../../database.types";
 import {validateStudent} from "../../../../common/validation/studentValidate";
