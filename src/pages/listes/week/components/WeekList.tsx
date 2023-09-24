@@ -23,7 +23,7 @@ function WeekList(
    return (
        <div className={"bg-blue-50 w-8/12 rounded-lg shadow-xl"}>
            <div className={"flex justify-start items-center mt-5"}>
-               <h4 className={"text-blue-600 text-3xl font-bold ml-10 mr-3"}>Weeks</h4>
+               <h4 className={"text-blue-600 text-3xl font-bold ml-10 mr-3"}>Semaines</h4>
                {isLoaded ?
                    <button onClick={addWeek}>
                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-blue-600">

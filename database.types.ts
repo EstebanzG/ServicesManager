@@ -5,6 +5,27 @@ export interface Student {
   classe: Classe;
 }
 
+export interface StudentWithServiceDistrib {
+  id: number;
+  firstname: string;
+  lastname: string;
+  classe: Classe;
+  service_distribution: ServiceDistribution[];
+}
+
+export interface ServiceDistribution {
+  id: number;
+  student_id: number;
+  week_id: number;
+  service_id: number;
+  monday_periode: number | null;
+  thuesday_periode: number | null;
+  wednesday_periode: number | null;
+  thursday_periode: number | null;
+  friday_periode: number | null;
+}
+
+
 export interface Classe {
   id: number
   name: string

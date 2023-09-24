@@ -65,11 +65,11 @@ function PeriodePage() {
     }
 
     const nextRange = () => {
-        setRange(range + rangeSize)
+        setRange(range + rangeSize + 1)
     }
 
     const prevRange = () => {
-        setRange(range - rangeSize)
+        setRange(range - rangeSize - 1)
     }
 
     const countPeriode = async () => {

@@ -2,7 +2,7 @@ import React from 'react';
 
 function Navbar() {
     return (
-        <div className={"w-full bg-blue-50 shadow-xl h-12 mb-6"}>
+        <header className={"w-full bg-blue-50 shadow-xl h-12 mb-6"}>
             <div className={"h-full flex items-center justify-around w-full lg:w-4/12"}>
                 <div className={"w-2/12 pl-2"}>
                     <a href={"/home"} className={"mr-2 flex items-center"}>
@@ -37,13 +37,13 @@ function Navbar() {
                             </svg>
                         </div>
                         <div className={"invisible absolute z-50 flex w-full flex-col py-1 bg-blue-50 shadow-xl group-hover:visible"}>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/print"}>Impression</a>
-                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/distribute"}>Répartition</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/repartition"}>Répartition</a>
+                            <a className="px-4 my-1 py-1 font-semibold text-blue-400 hover:text-blue-600" href={"/impression"}>Impression</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
 
     );
 }

@@ -78,11 +78,11 @@ function Students() {
     }
 
     const nextRange = () => {
-        setRange(range + rangeSize)
+        setRange(range + rangeSize + 1)
     }
 
     const prevRange = () => {
-        setRange(range - rangeSize)
+        setRange(range - rangeSize - 1)
     }
 
     const countStudent = async () => {
@@ -99,7 +99,7 @@ function Students() {
                     .from('student')
                     .select('*, classe(*)')
                     .order('classe, lastname, firstname')
-                    .range(range, range + 20)
+                    .range(range, range + rangeSize)
                 setStudents(data || []);
                 setIsLoaded(true)
                 manageFirstAndLastPage(nb, range, rangeSize, setIsFirstPage, setIsLastPage)

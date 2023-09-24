@@ -65,11 +65,11 @@ function WeekPage() {
     }
 
     const nextRange = () => {
-        setRange(range + rangeSize)
+        setRange(range + rangeSize + 1)
     }
 
     const prevRange = () => {
-        setRange(range - rangeSize)
+        setRange(range - rangeSize - 1)
     }
 
     const countWeek = async () => {
@@ -92,7 +92,6 @@ function WeekPage() {
                 manageFirstAndLastPage(nbOfWeeks, range, rangeSize, setIsFirstPage, setIsLastPage)
             }
         )
-
     }
 
     return (

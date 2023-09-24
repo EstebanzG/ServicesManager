@@ -15,3 +15,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.action-container {
+  @apply pt-5 w-full h-full flex items-center flex-col p-2
+}

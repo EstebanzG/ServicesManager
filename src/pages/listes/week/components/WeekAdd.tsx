@@ -43,7 +43,7 @@ function WeekAdd({loadWeeks, setIsError, setIsSuccess} : props) {
     }
 
     return (
-        <div className={"pt-5 w-full h-full flex items-center flex-col p-1"}>
+        <div className={"action-container"}>
             <h4 className={"text-blue-600 text-2xl font-bold mb-4 text-center"}>Ajout d'une nouvelle semaine</h4>
             <form className={"w-full flex flex-col items-center"}>
                 <div className={"w-10/12 flex flex-col mb-4"}>

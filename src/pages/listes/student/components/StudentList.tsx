@@ -44,12 +44,12 @@ function StudentList({students, isFirstPage, isLastPage, addStudent, updateStude
                </div>
                <table className={"border-collapse w-10/12 mb-7"}>
                    <thead>
-                   <tr className={"border-b-2 border-blue-500"}>
-                       <th className={"w-3/12"}>Nom</th>
-                       <th className={"w-3/12"}>Prénom</th>
-                       <th className={"w-3/12"}>Classe</th>
-                       <th className={"w-1/12"}></th>
-                   </tr>
+                       <tr className={"border-b-2 border-blue-500"}>
+                           <th className={"w-3/12"}>Nom</th>
+                           <th className={"w-3/12"}>Prénom</th>
+                           <th className={"w-3/12"}>Classe</th>
+                           <th className={"w-1/12"}></th>
+                       </tr>
                    </thead>
                    <tbody>
                    {students.map((student) => (
