@@ -5,8 +5,6 @@ import {supabase} from "../../../common/supabaseClient";
 import {
     Periode,
     Service,
-    ServiceDistribution,
-    Student,
     StudentWithServiceDistrib,
     Week
 } from "../../../../database.types";

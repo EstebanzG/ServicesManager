@@ -1,9 +1,15 @@
 import React from 'react';
+import {supabase} from "../../common/supabaseClient";
 
 function Navbar() {
+
+    const logout = async () => {
+        await supabase.auth.signOut()
+    }
+
     return (
-        <header className={"w-full bg-blue-50 shadow-xl h-12 mb-6"}>
-            <div className={"h-full flex items-center justify-around w-full lg:w-4/12"}>
+        <header className={"w-full bg-blue-50 shadow-xl h-12 mb-6 flex justify-between"}>
+            <div className={"h-full flex items-center justify-around lg:w-4/12"}>
                 <div className={"w-2/12 pl-2"}>
                     <a href={"/home"} className={"mr-2 flex items-center"}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-blue-500">
@@ -42,6 +48,13 @@ function Navbar() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className={"h-full flex items-center justify-end lg:w-4/12"}>
+                <button onClick={logout} className={"mr-5"}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-blue-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                    </svg>
+                </button>
             </div>
         </header>
 
