@@ -10,9 +10,10 @@ interface props {
     periodes: Periode[];
     services: Service[]
     selectedWeek: string;
+    selectedClasse: string;
     reload: boolean;
     setReload: (reload: boolean) => void;
-    loadStudents: (weekId: string) => void
+    loadStudentsWithServiceDistrib: (weekId: string, classeId: string) => void
 }
 
 const MONDAY: string = 'monday'
@@ -45,7 +46,17 @@ const dayOfTheWeekMap = (day: string) => {
 }
 
 function StudentRepartitionList(
-    {students, periodes, services, currentService, selectedWeek, reload, setReload, loadStudents}: props) {
+    {
+        students,
+        periodes,
+        services,
+        currentService,
+        selectedWeek,
+        selectedClasse,
+        loadStudentsWithServiceDistrib,
+        reload,
+        setReload
+    }: props) {
     const [isloaded, setIsloaded] = useState<boolean>(true);
     const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
 
@@ -84,7 +95,6 @@ function StudentRepartitionList(
                 })
             }
         })
-        console.log(periodeId)
     }
 
     const findValueOfPeriodByServiceAndByStudent = (student: StudentWithServiceDistrib, day: string): number => {
@@ -122,8 +132,9 @@ function StudentRepartitionList(
     const registerRepartitions = () => {
         setIsloaded(false)
         updateStudentRequest().then(() => {
-            loadStudents(selectedWeek)
+            loadStudentsWithServiceDistrib(selectedWeek, selectedClasse)
             setIsloaded(true)
+            setReload(true);
             setIsRegisterSuccess(true)
             setTimeout(() => setIsRegisterSuccess(false), 10000)
         })
@@ -160,11 +171,11 @@ function StudentRepartitionList(
 
     return (
         <>
-            <div className={"w-full flex flex-col items-center p-1"}>
-                {isRegisterSuccess ? <Success/> : ''}
-                {currentService !== '' ? (
+            {reload ? '' :
+                <div className={"w-full flex flex-col items-center p-1"}>
+                    {isRegisterSuccess ? <Success/> : ''}
                     <button type={"submit"} onClick={registerRepartitions}
-                            className={"bg-blue-500 w-2/12 flex items-center justify-center rounded-full shadow-lg pl-2 pr-2 pb-1 pt-1 mt-5 mb-5 hover:bg-blue-400"}>
+                            className={"bg-blue-500 flex items-center justify-center rounded-full shadow-lg px-6 py-1 my-5 hover:bg-blue-400"}>
                         {isloaded ? '' : (
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" strokeWidth={1.5} stroke="currentColor"
                                  className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
@@ -174,35 +185,34 @@ function StudentRepartitionList(
                         )}
                         <h4 className={"text-white font-bold text-xl"}>Enregistrer</h4>
                     </button>
-                ) : ''}
-                <table className={"w-10/12 mb-7"}>
-                    <thead>
-                    <tr className={"border-b-2 border-blue-500 text-left"}>
-                        <th className={'p-2'}>Nom - Prénom</th>
-                        <th className={'p-2'}>Classe</th>
-                        <th className={'p-2'}>Service</th>
-                        <th className={'p-2'}>Répartition</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        students.map(student => (
-                            <tr key={student.id} className={"border-b-2 border-blue-100 hover:bg-blue-100"}>
-                                <td className={""}>{student.lastname + "-" + student.firstname}</td>
-                                <td className={""}>{student.classe?.name}</td>
-                                <td className={"w-fit"}>
-                                    <ul className={"flex flex-col list-disc"}>
-                                        {findServicesNamesByStudent(student).map((serviceName) => (
-                                                <li key={serviceName}>{serviceName}</li>
-                                            )
-                                        )}
-                                    </ul>
-                                </td>
-                                <td className={"flex flex-col"}>
-                                    {daysOfTheWeek.map(day => (
-                                        <div key={day} className={"flex justify-between"}>
-                                            <label htmlFor={`select-${student.id}-${day}`}>{dayOfTheWeekMap(day)}</label>
-                                            {currentService !== '' && !reload ? (
+                    <table className={"w-10/12 mb-7"}>
+                        <thead>
+                        <tr className={"border-b-2 border-blue-500 text-left"}>
+                            <th className={'p-2'}>Nom - Prénom</th>
+                            <th className={'p-2'}>Classe</th>
+                            <th className={'p-2'}>Service</th>
+                            <th className={'p-2'}>Répartition</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            students.map(student => (
+                                <tr key={student.id} className={"border-b-2 border-blue-100 hover:bg-blue-100"}>
+                                    <td className={""}>{student.lastname + "-" + student.firstname}</td>
+                                    <td className={""}>{student.classe?.name}</td>
+                                    <td className={"w-fit"}>
+                                        <ul className={"flex flex-col list-disc"}>
+                                            {findServicesNamesByStudent(student).map((serviceName) => (
+                                                    <li key={serviceName}>{serviceName}</li>
+                                                )
+                                            )}
+                                        </ul>
+                                    </td>
+                                    <td className={"flex flex-col"}>
+                                        {daysOfTheWeek.map(day => (
+                                            <div key={day} className={"flex justify-between"}>
+                                                <label
+                                                    htmlFor={`select-${student.id}-${day}`}>{dayOfTheWeekMap(day)}</label>
                                                 <select
                                                     className={`border border-b-2 rounded`}
                                                     onChange={e => updateValueOfPeriodByServiceAndByStudent(student, day, parseInt(e.target.value))}
@@ -215,11 +225,9 @@ function StudentRepartitionList(
                                                                 value={periode.id}>{periode.name}</option>
                                                     ))}
                                                 </select>
-                                            ) : ''}
-                                        </div>
-                                    ))}
-                                    <div>
-                                        {currentService !== '' && !reload ? (
+                                            </div>
+                                        ))}
+                                        <div>
                                             <div className={"flex justify-between"}>
                                                 <label htmlFor={`select-all`}>Tous les jours</label>
                                                 <select
@@ -229,20 +237,21 @@ function StudentRepartitionList(
                                                 >
                                                     <option></option>
                                                     {periodes.map((periode) => (
-                                                        <option key={periode.id} value={periode.id}>{periode.name}</option>
+                                                        <option key={periode.id}
+                                                                value={periode.id}>{periode.name}</option>
                                                     ))}
                                                 </select>
                                             </div>
-                                        ) : ''}
-                                    </div>
-                                </td>
+                                        </div>
+                                    </td>
 
-                            </tr>
-                        ))
-                    }
-                    </tbody>
-                </table>
-            </div>
+                                </tr>
+                            ))
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
         </>
     );
 }
