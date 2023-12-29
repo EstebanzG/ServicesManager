@@ -34,7 +34,18 @@ export const loadStudentsWithServiceDistrib = async (weekId: string, classeId: s
             .order('classe, lastname, firstname')
         return data || [];
     }
+}
 
+export const loadStudentsWithServiceDistribForPrint = async (weekId: string, classId: string): Promise<StudentWithServiceDistrib[]> => {
+    let {data} = await supabase
+        .from('student')
+        .select('*, classe(*), service_distribution(*)')
+        .eq('service_distribution.week_id', parseInt(weekId))
+        .order('classe, lastname, firstname')
+    if (classId !== '-1') {
+        data = data?.filter(student => String(student.classe?.id) === classId) || []
+    }
+    return data || [];
 }
 
 export const loadPeriodes = async (): Promise<Periode[]> => {

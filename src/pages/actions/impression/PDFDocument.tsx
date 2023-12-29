@@ -1,79 +1,83 @@
 import React, {useEffect, useState} from 'react';
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
-import {Periode, Service, StudentWithServiceDistrib} from "../../../../database.types";
-import {supabase} from "../../../common/supabaseClient";
+import ReactPDF, {Document, Page, StyleSheet, Text} from '@react-pdf/renderer';
+import {Classe, Periode, Service, StudentWithServiceDistrib, Week} from "../../../../database.types";
+import {loadPeriodes, loadServices} from "../../../common/fetch/load";
+import View = ReactPDF.View;
+
 
 const styles = StyleSheet.create({
     body: {
+        paddingTop: 35,
+        paddingBottom: 65,
+        paddingHorizontal: 35,
+        fontSize: 12,
     },
-    table: {
-        padding: '50px',
+    header: {
+        marginBottom: 20,
+        textAlign: 'center',
+        color: 'grey',
     },
-    row: {
+    pageNumber: {
+        position: 'absolute',
+        bottom: 30,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        color: 'grey',
+    },
+    table_header: {
         display: 'flex',
-        justifyContent: "space-between",
         flexDirection: 'row',
-        borderBottom: '1px',
-        borderColor: 'grey',
-    },
-    text: {
-        fontSize: '12px',
-    },
-    italic: {
-        fontSize: '10px',
-        fontStyle: 'italic',
-    },
-    row1: {
-        width: '40%',
-    },
-    row2: {
-        width: '55%',
-    },
-    serviceRow: {
+        borderBottom: 1,
+        padding: 1,
         width: '100%',
-        marginBottom: '15px',
+        fontWeight: "bold",
     },
-    serviceName: {
-        marginBottom: '5',
+    table_row: {
+        display: 'flex',
+        flexDirection: 'row',
+        borderBottom: 1,
+        padding: 1,
+        width: '100%',
     },
-    borderRight: {
-        height: '100%',
-        borderRight: '1px',
-        borderColor: 'grey',
+    table_row_detail: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
     },
+    w_12: {
+        width: '12%',
+    },
+    w_9_6: {
+        width: '9.6%',
+    },
+    w_15: {
+        width: '15%',
+    },
+    w_20: {
+        width: '20%',
+    }
 })
 
 interface props {
-    setIsGenerated: (isGenerated: boolean) => void;
-    setIsLoad: (isLoad: boolean) => void;
     students: StudentWithServiceDistrib[];
+    selectedClasse?: Classe;
+    selectedWeek?: Week;
 }
 
 // Create Document Component
-const PDFDocument = ({students}: props) => {
+const PDFDocument = ({students, selectedClasse, selectedWeek}: props) => {
     const [periodes, setPeriodes] = useState<Periode[]>([]);
     const [services, setServices] = useState<Service[]>([]);
 
     useEffect(() => {
-        loadPeriodes().then()
-        loadServices().then()
+        loadPeriodes().then(
+            (periodes) => setPeriodes(periodes)
+        )
+        loadServices().then(
+            (services) => setServices(services)
+        )
     }, []);
-
-    const loadPeriodes = async () => {
-        let {data} = await supabase
-            .from('periode')
-            .select('*')
-            .order('name')
-        setPeriodes(data || []);
-    }
-
-    const loadServices = async () => {
-        let {data} = await supabase
-            .from('service')
-            .select('*')
-            .order('name')
-        setServices(data || []);
-    }
 
     const findServiceNameById = (serviceId: number) => {
         return services.find(service => service.id === serviceId)?.name;
@@ -83,58 +87,49 @@ const PDFDocument = ({students}: props) => {
         return periodes.find(service => service.id === periodeName)?.name;
     }
 
-    const formatPeriodesByStudentAndServiceId = (serviceId: number, student: StudentWithServiceDistrib): string => {
-        let serviceDistrib = student.service_distribution.find(serviceDistrib => serviceDistrib.service_id === serviceId);
-        if (serviceDistrib === undefined) {
-            return ''
-        }
-        let periodes = [];
-        if (serviceDistrib?.monday_periode !== null) {
-            periodes.push('Lundi ' + findPeriodeNameById(serviceDistrib?.monday_periode));
-        }
-        if (serviceDistrib?.thuesday_periode !== null) {
-            periodes.push('Mardi ' + findPeriodeNameById(serviceDistrib?.thuesday_periode));
-        }
-        if (serviceDistrib?.wednesday_periode !== null) {
-            periodes.push('Mercredi ' + findPeriodeNameById(serviceDistrib?.wednesday_periode));
-        }
-        if (serviceDistrib?.thursday_periode !== null) {
-            periodes.push('Jeudi ' + findPeriodeNameById(serviceDistrib?.thursday_periode));
-        }
-        if (serviceDistrib?.friday_periode !== null) {
-            periodes.push('Vendredi ' + findPeriodeNameById(serviceDistrib?.friday_periode));
-        }
-        return periodes.join(' | ');
-    }
-
     return (
-        <Document>
-            <Page style={styles.body}>
-                <View style={styles.table}>
-                    <View style={[styles.row]}>
-                        <Text style={styles.row1}>NOM Prénom</Text>
-                        <Text style={styles.row2}>Service(s)</Text>
-                    </View>
-                    {students.map((student) => (
-                        <View key={student.id} style={styles.row} wrap={false}>
-                            <View style={[styles.row1, styles.borderRight]}>
-                                <Text style={styles.text}>{student.lastname}  {student.firstname}</Text>
-                            </View>
-                            <View style={styles.row2}>
-                                {student.service_distribution.map(serviceDistrib => (
-                                    <View key={serviceDistrib.id} style={styles.serviceRow}>
-                                        <Text style={[styles.text, styles.serviceName]}>
-                                            {findServiceNameById(serviceDistrib.service_id)}
-                                        </Text>
-                                        <Text style={styles.italic}>
-                                            {formatPeriodesByStudentAndServiceId(serviceDistrib.service_id, student)}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    ))}
+        <Document title={"Export Service"} >
+            <Page size={'A4'} style={styles.body} orientation={"landscape"}>
+                <Text style={styles.header} fixed>
+                    {selectedWeek?.name} ~ {selectedClasse?.name ?? 'Toutes les classes'}
+                </Text>
+                <View style={styles.table_header}>
+                    <Text style={styles.w_20}>Élève</Text>
+                    <Text style={styles.w_20}>Service</Text>
+                    <Text style={styles.w_12}>Lundi</Text>
+                    <Text style={styles.w_12}>Mardi</Text>
+                    <Text style={styles.w_12}>Mercredi</Text>
+                    <Text style={styles.w_12}>Jeudi</Text>
+                    <Text style={styles.w_12}>Vendredi</Text>
                 </View>
+                {students.map(student => (
+                    <View style={styles.table_row}>
+                        <View>
+                            {student.service_distribution.length === 0 ?
+                                <Text style={styles.w_20}>{student.firstname} {student.lastname}</Text> : null
+                            }
+                            {student.service_distribution.map((serviceDistrib) => (
+                                <View style={styles.table_row_detail}>
+                                    <Text style={styles.w_20}>{student.firstname} {student.lastname}</Text>
+                                    <Text style={styles.w_20}>{findServiceNameById(serviceDistrib.service_id)}</Text>
+                                    <Text
+                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.monday_periode)}</Text>
+                                    <Text
+                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.thuesday_periode)}</Text>
+                                    <Text
+                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.wednesday_periode)}</Text>
+                                    <Text
+                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.thursday_periode)}</Text>
+                                    <Text
+                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.friday_periode)}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                ))}
+                <Text style={styles.pageNumber} render={({pageNumber, totalPages}) => (
+                    `${pageNumber} / ${totalPages}`
+                )} fixed/>
             </Page>
         </Document>
     )
