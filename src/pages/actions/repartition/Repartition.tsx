@@ -12,15 +12,19 @@ import {
 
 function RepartitionPage() {
     const [weeks, setWeeks] = useState<Week[]>([]);
+    const [services, setServices] = useState<Service[]>([]);
+    const [periodes, setPeriodes] = useState<Periode[]>([]);
+
     const [selectedWeekId, setSelectedWeekId] = useState<string>('');
     const [selectedServiceId, setSelectedServiceId] = useState<string>('');
     const [selectedClasseId, setSelectedClasseId] = useState<string>('');
-    const [services, setServices] = useState<Service[]>([]);
-    const [periodes, setPeriodes] = useState<Periode[]>([]);
+
     const [classes, setClasses] = useState<Classe[]>([]);
     const [students, setStudents] = useState<StudentWithServiceDistrib[]>([]);
+
     const [isLoaded, setIsLoaded] = useState<boolean>(true);
     const [reload, setReload] = useState<boolean>(false);
+    const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
     useEffect(() => {
         loadWeeks().then(
@@ -36,8 +40,7 @@ function RepartitionPage() {
             (classes) => setClasses(classes)
         );
     }, []);
-
-
+    
     function research(): void {
         setIsLoaded(false);
         loadStudentsWithServiceDistrib(selectedWeekId, selectedClasseId)
@@ -45,10 +48,27 @@ function RepartitionPage() {
                     setStudents(student);
                     setIsLoaded(true);
                     setReload(true);
+                    setIsSubmit(true);
                 }
             )
     }
 
+    function setSelectedWeek(weekId: string) {
+        setSelectedWeekId(weekId);
+        setIsSubmit(false);
+    }
+
+    function setSelectedService(serviceId: string) {
+        setSelectedServiceId(serviceId);
+        setIsSubmit(false);
+    }
+
+    function setSelectedClasse(classeId: string) {
+        setSelectedClasseId(classeId);
+        setIsSubmit(false);
+    }
+
+    
     return (
         <>
             <Navbar/>
@@ -62,7 +82,7 @@ function RepartitionPage() {
                                 id={"week-select"}
                                 className={"border border-b-2 p-1 w-8/12 rounded"}
                                 value={selectedWeekId}
-                                onChange={e => setSelectedWeekId(String(e.target.value))}
+                                onChange={e => setSelectedWeek(String(e.target.value))}
                             >
                                 <option></option>
                                 {
@@ -79,7 +99,7 @@ function RepartitionPage() {
                                 id={"service-select"}
                                 className={"border border-b-2 p-1 w-8/12 rounded"}
                                 value={selectedServiceId}
-                                onChange={e => setSelectedServiceId(String(e.target.value))}
+                                onChange={e => setSelectedService(String(e.target.value))}
                             >
                                 <option></option>
                                 {
@@ -100,7 +120,7 @@ function RepartitionPage() {
                                 id={"week-select"}
                                 className={"border border-b-2 p-1 w-8/12 rounded"}
                                 value={selectedClasseId}
-                                onChange={e => setSelectedClasseId(String(e.target.value))}
+                                onChange={e => setSelectedClasse(String(e.target.value))}
                             >
                                 <option></option>
                                 {
@@ -130,7 +150,7 @@ function RepartitionPage() {
                         </div>
                     </div>
                 </div>
-                {students.length !== 0 ?
+                {isSubmit ?
                     <>
                         <div className={"flex flex-col w-11/12 bg-blue-50 rounded-lg shadow-xl p-3 mb-4"}>
                             <StudentRepartitionList

@@ -36,16 +36,24 @@ export const loadStudentsWithServiceDistrib = async (weekId: string, classeId: s
     }
 }
 
-export const loadStudentsWithServiceDistribForPrint = async (weekId: string, classId: string): Promise<StudentWithServiceDistrib[]> => {
-    let {data} = await supabase
-        .from('student')
-        .select('*, classe(*), service_distribution(*)')
-        .eq('service_distribution.week_id', parseInt(weekId))
-        .order('classe, lastname, firstname')
-    if (classId !== '-1') {
-        data = data?.filter(student => String(student.classe?.id) === classId) || []
+export const loadStudentsWithServiceDistribForPrint = async (weekId: string, classeId: string): Promise<StudentWithServiceDistrib[]> => {
+    console.log(classeId)
+    if (classeId !== '-1') {
+        let {data} = await supabase
+            .from('student')
+            .select('*, classe(*), service_distribution(*)')
+            .eq('service_distribution.week_id', parseInt(weekId))
+            .eq('classe', parseInt(classeId))
+            .order('lastname, firstname')
+        return data || [];
+    } else {
+        let {data} = await supabase
+            .from('student')
+            .select('*, classe(*), service_distribution(*)')
+            .eq('service_distribution.week_id', parseInt(weekId))
+            .order('lastname, firstname')
+        return data || [];
     }
-    return data || [];
 }
 
 export const loadPeriodes = async (): Promise<Periode[]> => {

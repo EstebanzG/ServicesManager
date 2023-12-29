@@ -198,9 +198,9 @@ function StudentRepartitionList(
                         {
                             students.map(student => (
                                 <tr key={student.id} className={"border-b-2 border-blue-100 hover:bg-blue-100"}>
-                                    <td className={""}>{student.lastname + "-" + student.firstname}</td>
-                                    <td className={""}>{student.classe?.name}</td>
-                                    <td className={"w-fit"}>
+                                    <td className={"p-2"}>{student.lastname + "-" + student.firstname}</td>
+                                    <td className={"p-2"}>{student.classe?.name}</td>
+                                    <td className={"p-2 w-fit"}>
                                         <ul className={"flex flex-col list-disc"}>
                                             {findServicesNamesByStudent(student).map((serviceName) => (
                                                     <li key={serviceName}>{serviceName}</li>

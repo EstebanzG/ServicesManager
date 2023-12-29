@@ -88,10 +88,10 @@ const PDFDocument = ({students, selectedClasse, selectedWeek}: props) => {
     }
 
     return (
-        <Document title={"Export Service"} >
+        <Document title={`Export_Service-${selectedWeek?.name}-${selectedClasse?.name ?? 'Toutes les classes'}`} >
             <Page size={'A4'} style={styles.body} orientation={"landscape"}>
                 <Text style={styles.header} fixed>
-                    {selectedWeek?.name} ~ {selectedClasse?.name ?? 'Toutes les classes'}
+                    {selectedWeek?.name} - {selectedClasse?.name ?? 'Toutes les classes'}
                 </Text>
                 <View style={styles.table_header}>
                     <Text style={styles.w_20}>Élève</Text>
@@ -103,14 +103,14 @@ const PDFDocument = ({students, selectedClasse, selectedWeek}: props) => {
                     <Text style={styles.w_12}>Vendredi</Text>
                 </View>
                 {students.map(student => (
-                    <View style={styles.table_row}>
+                    <View style={styles.table_row} key={student.id}>
                         <View>
                             {student.service_distribution.length === 0 ?
-                                <Text style={styles.w_20}>{student.firstname} {student.lastname}</Text> : null
+                                <Text style={styles.w_20}>{student.lastname} {student.firstname}</Text> : null
                             }
                             {student.service_distribution.map((serviceDistrib) => (
-                                <View style={styles.table_row_detail}>
-                                    <Text style={styles.w_20}>{student.firstname} {student.lastname}</Text>
+                                <View style={styles.table_row_detail} key={serviceDistrib.id}>
+                                    <Text style={styles.w_20}>{student.lastname} {student.firstname}</Text>
                                     <Text style={styles.w_20}>{findServiceNameById(serviceDistrib.service_id)}</Text>
                                     <Text
                                         style={styles.w_12}>{findPeriodeNameById(serviceDistrib.monday_periode)}</Text>

@@ -24,6 +24,7 @@ function ImpressionPage() {
     }, []);
 
     const generatePdf = () => {
+        setIsSubmit(false);
         loadStudentsWithServiceDistribForPrint(selectedWeekId, selectedClasseId).then(
             (students) => {
                 setStudents(students);
