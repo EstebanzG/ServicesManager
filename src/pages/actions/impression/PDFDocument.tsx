@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import ReactPDF, {Document, Page, StyleSheet, Text} from '@react-pdf/renderer';
 import {Classe, Periode, Service, StudentWithServiceDistrib, Week} from "../../../../database.types";
-import {loadPeriodes, loadServices} from "../../../common/fetch/load";
 import View = ReactPDF.View;
 import {findPeriodeNameById, findServiceNameById} from "../../../common/utils";
 
