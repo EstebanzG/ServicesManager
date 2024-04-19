@@ -11,6 +11,7 @@ import RepartitionPage from "./pages/actions/repartition/Repartition";
 import Login from "./pages/auth/login/Login";
 import {Session} from "@supabase/supabase-js";
 import {supabase} from "./common/supabaseClient";
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
     const [session, setSession] = useState<Session | null>(null);
@@ -42,6 +43,7 @@ function App() {
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
             </Router>
+            <Analytics/>
         </div>
     );
 }
