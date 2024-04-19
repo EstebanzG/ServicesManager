@@ -37,7 +37,6 @@ export const loadStudentsWithServiceDistrib = async (weekId: string, classeId: s
 }
 
 export const loadStudentsWithServiceDistribForPrint = async (weekId: string, classeId: string): Promise<StudentWithServiceDistrib[]> => {
-    console.log(classeId)
     if (classeId !== '-1') {
         let {data} = await supabase
             .from('student')

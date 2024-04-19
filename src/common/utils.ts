@@ -1,3 +1,5 @@
+import {Periode, Service} from "../../database.types";
+
 export const manageFirstAndLastPage =
     (nbOfClasses: number,
      range: number,
@@ -15,4 +17,12 @@ export const manageFirstAndLastPage =
     } else {
         setIsLastPage(true)
     }
+}
+
+export const findServiceNameById = (services: Service[],serviceId: number) => {
+    return services.find(service => service.id === serviceId)?.name ?? '';
+}
+
+export const findPeriodeNameById = (periodes: Periode[], periodeName: number | null) => {
+    return periodes.find(service => service.id === periodeName)?.name ?? '';
 }

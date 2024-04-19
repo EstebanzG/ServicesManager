@@ -3,6 +3,7 @@ import ReactPDF, {Document, Page, StyleSheet, Text} from '@react-pdf/renderer';
 import {Classe, Periode, Service, StudentWithServiceDistrib, Week} from "../../../../database.types";
 import {loadPeriodes, loadServices} from "../../../common/fetch/load";
 import View = ReactPDF.View;
+import {findPeriodeNameById, findServiceNameById} from "../../../common/utils";
 
 
 const styles = StyleSheet.create({
@@ -61,32 +62,14 @@ const styles = StyleSheet.create({
 
 interface props {
     students: StudentWithServiceDistrib[];
+    services: Service[];
+    periodes: Periode[]
     selectedClasse?: Classe;
     selectedWeek?: Week;
 }
 
 // Create Document Component
-const PDFDocument = ({students, selectedClasse, selectedWeek}: props) => {
-    const [periodes, setPeriodes] = useState<Periode[]>([]);
-    const [services, setServices] = useState<Service[]>([]);
-
-    useEffect(() => {
-        loadPeriodes().then(
-            (periodes) => setPeriodes(periodes)
-        )
-        loadServices().then(
-            (services) => setServices(services)
-        )
-    }, []);
-
-    const findServiceNameById = (serviceId: number) => {
-        return services.find(service => service.id === serviceId)?.name;
-    }
-
-    const findPeriodeNameById = (periodeName: number | null) => {
-        return periodes.find(service => service.id === periodeName)?.name;
-    }
-
+const PDFDocument = ({students, selectedClasse, selectedWeek, services, periodes}: props) => {
     return (
         <Document title={`Export_Service-${selectedWeek?.name}-${selectedClasse?.name ?? 'Toutes les classes'}`} >
             <Page size={'A4'} style={styles.body} orientation={"landscape"}>
@@ -111,17 +94,17 @@ const PDFDocument = ({students, selectedClasse, selectedWeek}: props) => {
                             {student.service_distribution.map((serviceDistrib) => (
                                 <View style={styles.table_row_detail} key={serviceDistrib.id}>
                                     <Text style={styles.w_20}>{student.lastname} {student.firstname}</Text>
-                                    <Text style={styles.w_20}>{findServiceNameById(serviceDistrib.service_id)}</Text>
+                                    <Text style={styles.w_20}>{findServiceNameById(services, serviceDistrib.service_id)}</Text>
                                     <Text
-                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.monday_periode)}</Text>
+                                        style={styles.w_12}>{findPeriodeNameById(periodes, serviceDistrib.monday_periode)}</Text>
                                     <Text
-                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.thuesday_periode)}</Text>
+                                        style={styles.w_12}>{findPeriodeNameById(periodes, serviceDistrib.thuesday_periode)}</Text>
                                     <Text
-                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.wednesday_periode)}</Text>
+                                        style={styles.w_12}>{findPeriodeNameById(periodes, serviceDistrib.wednesday_periode)}</Text>
                                     <Text
-                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.thursday_periode)}</Text>
+                                        style={styles.w_12}>{findPeriodeNameById(periodes, serviceDistrib.thursday_periode)}</Text>
                                     <Text
-                                        style={styles.w_12}>{findPeriodeNameById(serviceDistrib.friday_periode)}</Text>
+                                        style={styles.w_12}>{findPeriodeNameById(periodes, serviceDistrib.friday_periode)}</Text>
                                 </View>
                             ))}
                         </View>
